@@ -1,0 +1,147 @@
+<script src="../tinytest.js"></script>
+<script>
+// FUNCTION
+//  Similar to the method isPrototypeOf(): 
+//  The isPrototypeOf() method checks if an object exists in another object's prototype chain.
+//    dog.isPrototypeOf(myDog);  // true
+//    dog.isPrototypeOf(empty);  // false
+//    Object.prototype.isPrototypeOf(myDog);  // true
+
+// RETURN VALUE
+//  It should return true or false ; 
+//  A Boolean indicating whether the calling object lies in the prototype chain of the specified object.
+
+// SIGNATURE
+//  isPrototypeOf(prototype, objectToCompare)
+
+// EXAMPLES
+//  var canine = {
+//    bark: function() {
+//      console.log('bark');
+//    }
+//  };
+//
+// var dog = Object.create(canine);
+// dog.fetch = function() {
+//   console.log('fetch');
+// };
+//
+// var myDog = Object.create(dog);
+// var empty = Object.create(null);
+
+// isPrototypeOf(dog, myDog); // true
+// isPrototypeOf(dog, empty); // false
+// isPrototypeOf(Object.prototype, myDog); // true
+// isPrototypeOf(canine, myDog) // true
+
+// CASES
+//   if the second passed paramenter is not an object, return false
+//   if the second parameter .__proto__ is equal to the prototype, then return true
+//   if the second parameter .__proto__ is not equal to the prototype, then return false
+
+// PROTOTYPE IMPLEMENTATION
+//   if (passedObject  !== object) {return false}
+//   if (object.__proto__ === prototype) { return true}
+//   else {return false}
+//
+
+
+function isPrototypeOf(prototype, objectToSearch) {
+  if (typeof objectToSearch !== "object") {
+    return false;
+  }
+
+  if (objectToSearch.__proto__ === prototype) {
+    return true;
+  } else {
+    return (isPrototypeOf(prototype, objectToSearch.__proto__));
+  }
+
+}
+
+tests({
+
+  'It should return true if the passed object prototype property is equal to its prototype': function() {
+    var canine = {
+      bark: function() {
+        console.log('bark');
+      }
+    };
+
+    var dog = Object.create(canine);
+    dog.fetch = function() {
+      console.log('fetch');
+    };
+
+    var myDog = Object.create(dog);
+    var empty = Object.create(null);
+
+    eq(isPrototypeOf(dog, myDog), true); 
+  },
+
+  'It should return false if the passed object prototype is not equal to its prototype': function() {
+    var canine = {
+      bark: function() {
+        console.log('bark');
+      }
+    };
+
+    var dog = Object.create(canine);
+    dog.fetch = function() {
+      console.log('fetch');
+    };
+
+    var myDog = Object.create(dog);
+    var empty = Object.create(null);
+
+    eq(isPrototypeOf(dog, empty), false);
+  },
+
+  'It should return true if the passed object is contained anywhere in the second parameter prototype chain': function() {
+    var canine = {
+      bark: function() {
+        console.log('bark');
+      }
+    };
+
+    var dog = Object.create(canine);
+    dog.fetch = function() {
+      console.log('fetch');
+    };
+
+    var myDog = Object.create(dog);
+    var empty = Object.create(null);
+
+    eq(isPrototypeOf(Object.prototype, myDog), true);
+  },
+
+  'It should return true if the passed object is contained anywhere in the second parameter prototype chain, example 2': function() {
+    var canine = {
+      bark: function() {
+        console.log('bark');
+      }
+    };
+
+    var dog = Object.create(canine);
+    dog.fetch = function() {
+      console.log('fetch');
+    };
+
+    var myDog = Object.create(dog);
+    var empty = Object.create(null);
+
+    var dog = Object.create(canine);
+    dog.fetch = function() {
+      console.log('fetch');
+    };
+
+    eq(isPrototypeOf(canine, myDog), true)
+  },
+
+  'It should return false if the second passed parameter is not an object': function() {
+    eq(isPrototypeOf(Object.prototype, 42), false);
+  }
+
+});
+
+</script>
