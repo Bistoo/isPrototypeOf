@@ -140,6 +140,8 @@ tests({
 
   'It should return false if the second passed parameter is not an object': function() {
     eq(isPrototypeOf(Object.prototype, 42), false);
+    eq(isPrototypeOf(Number.prototype, 42), false);
+    eq(isPrototypeOf(String.prototype, '42'), false);
   }
 
 });
